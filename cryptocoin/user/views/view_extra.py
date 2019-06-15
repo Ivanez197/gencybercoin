@@ -147,9 +147,9 @@ def submit_extras_feedback(request):
                         # bug bounty
                         run_bug_bounty(request, ud, 'bug#6:stored_XSS', 'Congrats! You found a programming bug called stored cross-site scripting! This bug would allow you to execute malicious javascript code in browsers.', 'https://excess-xss.com/')
                         # end bug bounty
-                    messages.info(request, 'Your feedback has been recorded. Thank you so much!')
+                    messages.info(request, 'Your feedback has been sent to the GenCyber Team. Thank you! :)')
             except:
-                messages.warning(request, 'Something went wrong, your feedback has not been recorded')
+                messages.warning(request, 'An error has occurred! Your feedback was not sent :( Try again later!')
     return HttpResponseRedirect(reverse('user:extras-feedback'))
 
 

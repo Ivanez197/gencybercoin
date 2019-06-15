@@ -4,176 +4,183 @@
 {% load auth_extras %}
 {% load static %}
 <div class="row">
-    <div class="box">
-        <div class="col-lg-3" style="margin: auto 0;">
-          <hr>
-          <h2 class="intro-text text-center">Redeem Reward Code</h2>
-          <hr>
-          <form class="form-inline text-center" action="{% url 'user:submit-wallet' %}" method="post">
-          {% csrf_token %}
-            <div class="form-group">
-              <input type="text" class="form-control text-center" id="iC" name="inputCode" maxlength="100" placeholder="Enter code" style="margin: 5px;" required>
-                <div class="text-align:center">
-                  <button type="submit" class="btn btn-primary" name="redeem" style="margin: 5px;" value="redeem">Redeem</button>
-                </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-lg-9">
-            <hr>
-            <h2 class="intro-text text-center">GenCyberCoin Wallet</h2>
-            <hr>
-            {% if request.user|is_admin and not request.user|student_mode %}<p class="lead text-center">As an admin, you can transfer REWARD coins directly to your students without entering your password</p>{% endif %}
-            {% if messages %}
-              {% for message in messages %}
-                  <div class="lead text-center{% if message.tags %} text-{{ message.tags }}{% endif %}">{{ message }}</div>
-              {% endfor %}
-            {% endif %}
-
-        {% if userdata.is_admin and not request.user|student_mode %}
-        <form class="form-horizontal" action="{% url 'user:submit-wallet' %}" method="post">
+  <div class="box">
+    <div class="col-lg-3" style="margin: auto 0;">
+      <hr>
+      <h2 class="intro-text text-center">Redeem Reward Code</h2>
+      <hr>
+      <form class="form-inline text-center" action="{% url 'user:submit-wallet' %}" method="post">
         {% csrf_token %}
-        {% endif %}
-            <div class="col-sm-6 text-center">
-              <h3>Appreciation Coins</h3>
-              <p class="lead">(savings account)</p>
-              <img src="{% static 'user/img/savings-gencybercoin.jpg' %}" class="img-responsive img-circle" alt="Appreciation Coins" style="margin: 0 auto; max-width: 100px;" />
-              {% if userdata.is_admin and not request.user|student_mode %}
-                <div class="input-group coins">
-                    <div class="input-group-addon">&clubs;</div>
-                    <input type="number" class="form-control input-lg text-center" name="honoraryCoins" value="{{ userdata.honory_coins }}" size="4" min="0">
-                </div>
-              {% else %}
-              <p class="text-center coins">&clubs;{{ userdata.honory_coins }}</p>
-              {% endif %}
-            </div>
-            <div class="col-sm-6 text-center">
-              <h3>Reward Coins</h3>
-              <p class="lead">(checking account)</p>
-              <img src="{% static 'user/img/gencybercoin.png' %}" class="img-responsive img-circle" alt="Reward Coins" style="margin: 0 auto; max-width: 100px;" />
-            {% if userdata.is_admin and not request.user|student_mode %}
-              <div class="input-group coins">
-                  <div class="input-group-addon">&hearts;</div>
-                  <input type="number" class="form-control input-lg text-center" name="permanentCoins" value="{{ userdata.permanent_coins }}" size="4" min="0">
-              </div>
-            {% else %}
-              <p class="text-center coins">&hearts;{{ userdata.permanent_coins }}</p>
-            {% endif %}
-            </div>
-        {% if userdata.is_admin and not request.user|student_mode %}
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary center-block" name="saveCoins">Save Coins</button>
-            </div>
-            <hr>
-        </form>
-        {% csrf_token %}
-        {% endif %}
-
-            <div class="col-lg-12">
-              <p class="lead text-center">Coins Transfer</p>
-                <div class="accordion" id="accordion-coin-text">
-                  <div class="card text-center">
-                    <div class="card-header" id="appreciation-coin-card">
-                      <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#appreciationCoin" aria-expanded="true" aria-controls="appreciationCoin">
-                          APPRECIATION COINS
-                        </button>
-                      </h5>
-                    </div>
-                    <div id="appreciationCoin" class="collapse" aria-labelledby="appreciationCoin-btn" data-parent="#appreciationCoin-collapse">
-                      <div class="card-body">
-                        <p class="sublead"> You can transfer APPRECIATION coins to GENCYBER TEAM MEMBERS; these coins can be given to those you appreciated and enjoyed working with. <br><br> You can transfer any amount of APPRECIATION coins as many times as you want. <br><br> All transfers are recorded in the Features -> Blockchain.{% if not request.user|has_group:"gcadmin" %} Every transaction is verified with your password.{% endif %} </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card text-center">
-                    <div class="card-header" id="reward-coin-card">
-                      <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#rewardCoin" aria-expanded="false" aria-controls="rewardCoin">
-                          REWARD COINS
-                        </button>
-                      </h5>
-                    </div>
-                    <div id="rewardCoin" class="collapse" aria-labelledby="rewardCoin-btn" data-parent="#rewardCoin-collapse">
-                      <div class="card-body">
-                        <p class="sublead"> You can transfer REWARD coins to your peers for any reason:<br><br>1. A peer unconditionally helped you<br>2. You noticed that one of your peers was a great leader in a team<br>3. You would like to encourage a peer<br>4. As a token of appreciation<br>5. Reward a peer who contributed the most in a team challenge.<br><br>You are limited to ONE transfer of a maximum amount of {{ amount_allowed_to_send }} REWARD coins per peer.<br><br>IMPORTANT: REWARD coins are used to order ITEMS from the market; transfer these coins at your own discretion.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              <form class="form-horizontal" action="{% url 'user:transfer' %}" method="post">
-              {% csrf_token %}
-                <div class="form-group">
-                  <label for="iT" class="col-sm-3 control-label">Transfer to:</label>
-                  <div class="input-group col-sm-6">
-                    <select class="form-control" id="iT" name="inputTransfer" onchange="updateCurrency(this)">
-                      <option>Select a member</option>
-                      {% for au in allusers %}
-                        {% if au.username != request.user.username %}
-                          <option value="{{ au.id }}">{{ au.first_name }} {{ au.last_name }}{% if au.is_admin %} (GenCyber Team){% endif %}</option>
-                        {% endif %}
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="iA" class="col-sm-3 control-label">Amount</label>
-                  <div class="input-group col-sm-6">
-                    <div class="input-group-addon" id="clubs-or-hearts"></div>
-                    <input type="text" class="form-control" id="iA" name="inputAmount" placeholder="Input amount here" disabled>
-                    <!-- <div class="input-group-addon">.00</div> This line is unnecessary-->
-                  </div>
-                </div>
-                {% if not request.user|has_group:"gcadmin" %}
-                <div class="form-group">
-                  <label for="iP" class="col-sm-3 control-label">Password</label>
-                  <div class="input-group col-sm-6">
-                    <input type="password" class="form-control" id="iP" name="userPassword" placeholder="Used to confirm this transaction">
-                  </div>
-                </div>
-                {% endif %}
-                <div class="form-group">
-                  <div class="col-lg-12 text-center">
-                    <button type="submit" class="btn btn-primary" name="submit">Confirm Transaction</button>
-                  </div>
-                </div>
-              </form>
-
-            </div>
+        <div class="form-group">
+          <input type="text" class="form-control text-center" id="iC" name="inputCode" maxlength="100" placeholder="Enter code" style="margin: 5px;" required>
+          <div class="text-align:center">
+            <button type="submit" class="btn btn-primary" name="redeem" style="margin: 5px;" value="redeem">Redeem</button>
+          </div>
         </div>
+      </form>
     </div>
-</div>
+    <div class="col-lg-9">
+      <hr>
+      <h2 class="intro-text text-center">GenCyberCoin Wallet</h2>
+      <hr>
+      {% if request.user|is_admin and not request.user|student_mode %}<p class="lead text-center">As an admin, you can transfer REWARD coins directly to your students without entering your password</p>{% endif %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="lead text-center{% if message.tags %} text-{{ message.tags }}{% endif %}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
 
-{% endblock %}
+      {% if userdata.is_admin and not request.user|student_mode %}
+      <form class="form-horizontal" action="{% url 'user:submit-wallet' %}" method="post">
+        {% csrf_token %}
+        {% endif %}
+        <div class="col-sm-6 text-center">
+          <h3>Appreciation Coins</h3>
+          <p class="lead">(savings account)</p>
+          <img src="{% static 'user/img/savings-gencybercoin.jpg' %}" class="img-responsive img-circle" alt="Appreciation Coins" style="margin: 0 auto; max-width: 100px;" />
+          {% if userdata.is_admin and not request.user|student_mode %}
+          <div class="input-group coins">
+            <div class="input-group-addon">&clubs;</div>
+            <input type="number" class="form-control input-lg text-center" name="honoraryCoins" value="{{ userdata.honory_coins }}" size="4" min="0">
+          </div>
+          {% else %}
+          <p class="text-center coins">&clubs;{{ userdata.honory_coins }}</p>
+          {% endif %}
+        </div>
+        <div class="col-sm-6 text-center">
+          <h3>Reward Coins</h3>
+          <p class="lead">(checking account)</p>
+          <img src="{% static 'user/img/gencybercoin.png' %}" class="img-responsive img-circle" alt="Reward Coins" style="margin: 0 auto; max-width: 100px;" />
+          {% if userdata.is_admin and not request.user|student_mode %}
+          <div class="input-group coins">
+            <div class="input-group-addon">&hearts;</div>
+            <input type="number" class="form-control input-lg text-center" name="permanentCoins" value="{{ userdata.permanent_coins }}" size="4" min="0">
+          </div>
+          {% else %}
+          <p class="text-center coins">&hearts;{{ userdata.permanent_coins }}</p>
+          {% endif %}
+        </div>
+        {% if userdata.is_admin and not request.user|student_mode %}
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary center-block" name="saveCoins">Save Coins</button>
+        </div>
+        <hr>
+      </form>
+      {% csrf_token %}
+      {% endif %}
 
-{% block customjs %}
-<script>
-function updateCurrency(obj) {
-    if (obj.selectedIndex == -1)
+      <div class="col-lg-12">
+        <div class="accordion" id="accordion-coin-text">
+          <div class="card text-center">
+            <div class="card-header" id="appreciation-coin-card">
+              <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#appreciationCoin-btn" aria-expanded="true" aria-controls="appreciationCoin-btn">
+                  <span style="font-size:medium;"><u>WHAT ARE APPRECIATION COINS?</u></span>
+                </button>
+              </h5>
+            </div>
+            <div id="appreciationCoin-btn" class="collapse" aria-labelledby="appreciationCoin" data-parent="#appreciationCoin-collapse">
+              <div class="card-body">
+                <div class="normal-text">
+                  <p class="sublead">
+                    <span style=font-size:medium;">APPRECIATION coins are coins that you can transfer to your GENCYBER TEAM MEMBERS.<br><br>These coins can be given to those you appreciated and enjoyed working with. <br><br> You can transfer any amount of APPRECIATION coins as many times as you want. <br><br> All transfers are recorded in the <a href="https://gencybercoin.tk/extras/blockchain/" target="_blank"><u>Blockchain</u></a> page.{% if not request.user|has_group:"gcadmin" %} Every transaction is verified with your password.{% endif %}</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card text-center">
+              <div class="card-header" id="reward-coin-card">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#rewardCoin" aria-expanded="false" aria-controls="rewardCoin">
+                    <span style="font-size:medium;"><u>WHAT ARE REWARD COINS?</u></span>
+                  </button>
+                </h5>
+              </div>
+              <div id="rewardCoin" class="collapse" aria-labelledby="rewardCoin-btn" data-parent="#rewardCoin-collapse">
+                <div class="card-body">
+                  <div class="normal-text">
+                    <p class="sublead">
+                      <span style="font-size:medium;">REWARD coins are coins that you can transfer to your PEERS.<br><br>These coins can be given to a PEER for any reason: they unconditionally helped you; you noticed that one of your them was a great leader in a team; you would like to encourage them; or even as a token of appreciation! :)<br><br>You are LIMITED to ONE transfer of a maximum amount of {{ amount_allowed_to_send }} REWARD coins per peer.<br><br>All transfers are recorded in the <a href="https://gencybercoin.tk/extras/blockchain/" target="_blank"><u>Blockchain</u></a> page.{% if not request.user|has_group:"gcadmin" %} Every transaction is verified with your password.{% endif %}<br><br>IMPORTANT: REWARD coins are used to order ITEMS from the Market; transfer these coins at your own discretion.</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <h2 class="intro-text text-center">Coins Transfer</h2>
+            <hr>
+            <form class="form-horizontal" action="{% url 'user:transfer' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group text-center">
+                <label for="iT" class="col-sm-3 control-label">Transfer to:</label>
+                <div class="input-group col-xs-12 col-sm-6">
+                  <select class="form-control" id="iT" name="inputTransfer" onchange="updateCurrency(this)">
+                    <option>Select a member</option>
+                    {% for au in allusers %}
+                    {% if au.username != request.user.username %}
+                    <option value="{{ au.id }}">{{ au.first_name }} {{ au.last_name }}{% if au.is_admin %} (GenCyber Team){% endif %}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group text-center">
+                <label for="iA" class="col-sm-3 control-label">Amount</label>
+                <div class="input-group col-xs-12 col-sm-6">
+                  <div class="input-group-addon" id="clubs-or-hearts"></div>
+                  <input type="text" class="form-control" id="iA" name="inputAmount" placeholder="Input amount" disabled>
+                  <!-- <div class="input-group-addon">.00</div> This line is unnecessary-->
+                </div>
+              </div>
+              {% if not request.user|has_group:"gcadmin" %}
+              <div class="form-group text-center">
+                <label for="iP" class="col-sm-3 control-label">Password</label>
+                <div class="input-group col-xs-12 col-sm-6">
+                  <input type="password" class="form-control" id="iP" name="userPassword" placeholder="Used to confirm this transaction">
+                </div>
+              </div>
+              {% endif %}
+              <div class="form-group">
+                <div class="col-lg-12 text-center">
+                  <button type="submit" class="btn btn-primary" name="submit">Confirm Transaction</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}
+
+    {% block customjs %}
+    <script>
+      function updateCurrency(obj) {
+        if (obj.selectedIndex == -1)
         return null;
 
-    var clubsOrHearts = document.getElementById('clubs-or-hearts');
-    var transferTo = document.getElementById('iA');
-    if (obj.selectedIndex == 0) {
-        clubsOrHearts.innerHTML = "";
-        transferTo.placeholder = "Choose the user you want to send the money to";
-        transferTo.disabled = true;
-    }
-    else if (obj.options[obj.selectedIndex].text.includes("GenCyber Team")) {
-        clubsOrHearts.innerHTML = "&clubs;";
-        transferTo.placeholder = "You can send as many " + String.fromCharCode(9827) + "coins as you want";
-        transferTo.disabled = false;
-    }
-    else {
-        clubsOrHearts.innerHTML = "&hearts;";
-        {% if not request.user|has_group:"gcadmin" %}
-        transferTo.placeholder = "You are limited to sending up to " + String.fromCharCode(9829) + {{ amount_allowed_to_send }};
-        {% else %}
-        transferTo.placeholder = "You can send as many " + String.fromCharCode(9829) + "coins as you want";
-        {% endif %}
-        transferTo.disabled = false;
-    }
-}
-</script>
-{% endblock %}
+        var clubsOrHearts = document.getElementById('clubs-or-hearts');
+        var transferTo = document.getElementById('iA');
+        if (obj.selectedIndex == 0) {
+          clubsOrHearts.innerHTML = "";
+          transferTo.placeholder = "Choose the user you want to send the money to";
+          transferTo.disabled = true;
+        }
+        else if (obj.options[obj.selectedIndex].text.includes("GenCyber Team")) {
+          clubsOrHearts.innerHTML = "&clubs;";
+          transferTo.placeholder = "You can send as many " + String.fromCharCode(9827) + "coins as you want";
+          transferTo.disabled = false;
+        }
+        else {
+          clubsOrHearts.innerHTML = "&hearts;";
+          {% if not request.user|has_group:"gcadmin" %}
+          transferTo.placeholder = "You are limited to sending up to " + String.fromCharCode(9829) + {{ amount_allowed_to_send }};
+          {% else %}
+          transferTo.placeholder = "You can send as many " + String.fromCharCode(9829) + "coins as you want";
+          {% endif %}
+          transferTo.disabled = false;
+        }
+      }
+    </script>
+    {% endblock %}

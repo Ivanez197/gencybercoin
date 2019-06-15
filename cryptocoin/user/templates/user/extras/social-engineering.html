@@ -2,59 +2,84 @@
 
 {% block content %}
 <div class="row">
-    <div class="box">
-        <div class="col-lg-12">
-            <hr>
-            <h2 class="intro-text text-center">Reconnaissance ({% if allquestions and correctanswers %}{{ correctanswers|length }}/{{ allquestions|length }}{% else %}0/0{% endif %})</h2>
-            <hr>
-            {% if messages %}
-              {% for message in messages %}
-                  <div class="lead text-center{% if message.tags %} text-{{ message.tags }}{% endif %}">{{ message }}</div>
-              {% endfor %}
-            {% endif %}
-            <div class="normal-text">
-                <p class="lead text-primary">The order of words does not matter in your answers. Make sure you separate words with a space. Inputted answers are CASE INSENSITIVE; for example, “apple” and “APPLE” are viewed as the same answer. </p>
-                <p class="lead">Reconnaissance in the cyberspace is about gaining knowledge about a specific target. A part of reconnaissance is <u><a href="https://www.webroot.com/us/en/resources/tips-articles/what-is-social-engineering" target="_blank">Social Engineering</a></u> (SE), which is the art of retrieving information from people who are not completely aware of the kind of information they share with strangers. You can find answers to the following questions by using your Internet searching skills or figuring out a way to ask certain people the right questions. If done properly, the person will not suspect anything from that question! You are encouraged to form groups in order to achieve your objectives.</p>
-                <p class="lead">People are the weakest link in security; staying constantly aware of who you communicate with, what links you click on, and what information you see in front of you is important in order to stay secure in the 21st century and beyond..</p>
-            </div>
-            {% if allquestions %}
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8" style="padding-top: 20px;">
-            {% if correctanswers %}
-                <div class="text-center"><button type="button" class="btn btn-link btn-lg" data-toggle="collapse" data-target="#admin_show_info" style="white-space: normal;">Show correctly answered challenges</button></div>
-                <div id="admin_show_info" class="collapse">
-                    {% for q in allquestions %}
-                        {% if q.id in correctanswers %}
-                            <div class="form-group{% if q.id in correctanswers %} has-success has-feedback{% endif %}">
-                                <label for="q{{ q.id }}">{{ q.question }}</label>
-                                <input type="text" class="form-control" id="q{{ q.id }}" name="{{ q.id }}" maxlength="200" value="{{ q.answer }}" aria-describedby="q{{ q.id }}Status" readonly="readonly">
-                                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                                <span id="q{{ q.id }}Status" class="sr-only">(success)</span>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-                <form class="form-horizontal" action="{% url 'user:submit-social-engineering' %}" method="post">
-                {% csrf_token %}
-                    {% for q in allquestions %}
-                        {% if q.id not in correctanswers %}
-                            <div class="form-group{% if q.id in correctanswers %} has-success has-feedback{% endif %}">
-                                <label for="q{{ q.id }}">{{ q.question }}</label>
-                                <input type="text" class="form-control" id="q{{ q.id }}" name="{{ q.id }}" maxlength="200" placeholder="Enter you answer">
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" name="submit">Submit</button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-sm-2"></div>
-            {% else %}
-            <p class="lead text-center text-warning">There are no available social engineering questions at this time. Ask your GenCyber organizers to add some  questions! ;)</p>
-            {% endif %}
+  <div class="box">
+    <div class="col-md-12">
+      <hr>
+      <h2 class="intro-text text-center">Reconnaissance ({% if allquestions and correctanswers %}{{ correctanswers|length }}/{{ allquestions|length }}{% else %}0/0{% endif %})</h2>
+      <hr>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="lead text-center{% if message.tags %} text-{{ message.tags }}{% endif %}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
+
+      <div class="col-md-12">
+        <div class="normal-text">
+          <p class="lead text-primary text-center">The order of words DOES NOT matter in your answers. Make sure you separate words with a space. Inputted answers are CASE INSENSITIVE; respective uppercase and lowercase letters are interpreted as one and the same.<br>If you answer a question correctly, you will receive REWARD coins! :D</p>
         </div>
+      </div>
+
+      <div class="col-md-12">
+        <div id="accordion" id="accordion-recon-text">
+          <div class="card text-center">
+            <div class="card-header" id=recon-header">
+              <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#recon-btn" aria-expanded="true" aria-controls="recon-btn">
+                  <span style="font-size:large;"><u>WHAT IS RECONNAISSANCE?</u></span>
+                </button>
+              </h5>
+            </div>
+            <div id="recon-btn" class="collapse" aria-labellby="recon-header" data-parent="#recon-collapse">
+              <div class="card-body">
+                <div class="normal-text">
+                  <p class="sublead">
+                    <span style="font-size:medium;">Reconnaissance in the cyberspace is about gaining knowledge about a specific target. A part of reconnaissance is <u><a href="https://www.webroot.com/us/en/resources/tips-articles/what-is-social-engineering" target="_blank">Social Engineering</a></u> (SE), which is the art of retrieving information from people who are not completely aware of the kind of information they share with strangers. You can find answers to the following questions by using your Internet searching skills or figuring out a way to ask certain people the right questions. <br><br>If done properly, the person will not suspect anything from that question! You are encouraged to form groups in order to achieve your objectives.<br><br>People are the weakest link in security; staying constantly aware of who you communicate with, the links you click on, and what information you see in front of you is important in order to stay secure in the 21st century and beyond.</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if allquestions %}
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8" style="padding-top: 20px;">
+
+        <form class="form-horizontal" action="{% url 'user:submit-social-engineering' %}" method="post">
+          {% csrf_token %}
+          {% for q in allquestions %}
+          {% if q.id not in correctanswers %}
+          <div class="form-group{% if q.id in correctanswers %} has-success has-feedback{% endif %}">
+            <label for="q{{ q.id }}">{{ q.id }}. {{ q.question }}</label>
+            <input type="text" class="form-control" id="q{{ q.id }}" name="{{ q.id }}" maxlength="200" placeholder="Answer">
+          </div>
+          {% endif %}
+          {% endfor %}
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+          </div>
+        </form>
+        {% if correctanswers %}
+        <div class="text-center"><button type="button" class="btn btn-link btn-lg" data-toggle="collapse" data-target="#admin_show_info" style="white-space: normal;">Show Correctly Answered Questions</button></div>
+        <div id="admin_show_info" class="collapse">
+          {% for q in allquestions %}
+          {% if q.id in correctanswers %}
+          <div class="form-group{% if q.id in correctanswers %} has-success has-feedback{% endif %}">
+            <label for="q{{ q.id }}">{{ q.id }}. {{ q.question }}</label>
+            <input type="text" class="form-control" id="q{{ q.id }}" name="{{ q.id }}" maxlength="200" value="{{ q.answer }}" aria-describedby="q{{ q.id }}Status" readonly="readonly">
+            <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+            <span id="q{{ q.id }}Status" class="sr-only">(success)</span>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="col-sm-2"></div>
+      {% else %}
+      <p class="lead text-center text-warning">There are no available social engineering questions at this time. Ask your GenCyber organizers to add some questions! ;)</p>
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}

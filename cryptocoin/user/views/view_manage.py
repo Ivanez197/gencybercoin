@@ -579,7 +579,7 @@ def submit_market_admin(request):
                                 context = {'status': 'success', 'message': 'Successfully updated ' + market_item.name}
                                 return JsonResponse(context)
                             elif update_remove == "remove":
-                                messages.info(request, 'Market item ' + market_item.name + ' has been deleted')
+                                messages.info(request, 'Market item "' + market_item.name + '" has been deleted')
                                 if market_item.image_file.url != "/media/no-image.jpg":
                                     market_item.image_file.delete()
                                 market_item.delete()
