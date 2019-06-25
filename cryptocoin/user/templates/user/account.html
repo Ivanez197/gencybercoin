@@ -25,7 +25,18 @@
             {% if useranswers %}
             <tr><th scope="row">School</th><td>{{ userdata.school.name }}</td></tr>
             <tr>
-              <th scope="row">{{ useranswers.question1 }}</th>
+              <th scope="row">
+                <form>
+                  <div class="form-group">
+                    <select class="form-control">
+                    <option selected>{{ useranswers.question1 }}</option>
+                    {% for q in questions %}
+                      <option>{{ q.question }}</option>
+                    {% endfor %}
+                    </select>
+                  </div>
+                </form>
+              </th>
               <td><input type="text" class="form-control text-center" id="iSQ1" name="inputSecQ1" maxlength="90" value="{{ useranswers.answer1 }}" required></td>
             </tr>
             <tr>

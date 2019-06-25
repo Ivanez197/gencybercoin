@@ -30,6 +30,7 @@ class UserData(models.Model):
     team_number     = models.IntegerField(default=0)
     tier            = models.IntegerField(default=0)
     driplets_score  = models.IntegerField(default=0)
+    group_number    = models.IntegerField(default=0)  # starts with 1, 0 means not grouped
     school          = models.ForeignKey(School, on_delete=models.CASCADE, blank=True, null=True)  # one to many relationship
 
     def save(self, *args, **kwargs):
@@ -127,8 +128,8 @@ def image_upload_activities(instance, filename):
 
 
 class MarketItem(models.Model):
-    name            = models.CharField(max_length=100)
-    description     = models.CharField(max_length=400)
+    name            = models.CharField(max_length=100, default='-')
+    description     = models.CharField(max_length=400, default='-')
     cost_permanent  = models.IntegerField(default=0)
     image_file      = models.ImageField(upload_to=image_upload_market, default='no-image.jpg')
     quantity        = models.IntegerField(default=1)
@@ -155,8 +156,8 @@ class Cart(models.Model):
 
 class Achievement(models.Model):
     user_data       = models.ManyToManyField(UserData, blank=True)
-    name            = models.CharField(max_length=100)
-    description     = models.CharField(max_length=400)
+    name            = models.CharField(max_length=100, default='-')
+    description     = models.CharField(max_length=400, default='-')
     image_file      = models.ImageField(upload_to=image_upload_activities, default='no-image.jpg')
     school          = models.ForeignKey(School, on_delete=models.CASCADE, blank=True, null=True)  # one to many relationship
 

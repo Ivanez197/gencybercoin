@@ -61,7 +61,7 @@ var name;
 
         $modal.on('shown.bs.modal', function () {
           cropper = new Cropper(image, {
-            //aspectRatio: 1,
+            aspectRatio: 4 / 3,
             //autoCropArea: 1,
             viewMode: 2,
             minCropBoxWidth: 50,

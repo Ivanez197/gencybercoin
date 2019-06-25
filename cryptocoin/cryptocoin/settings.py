@@ -100,8 +100,8 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'coin_db',
-            'USER': 'coin_admin',
-            'PASSWORD': 'go-figure-me-cow',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
             'HOST': 'localhost',
             'PORT': '5432',
         }

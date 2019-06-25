@@ -11,7 +11,7 @@ def update_sec_questions(request):
             ua.answer1 = request.POST.get('inputSecQ1')
             ua.answer2 = request.POST.get('inputSecQ2')
             ua.answer3 = request.POST.get('inputSecQ3')
-            if validate_on_save(request, ua, 'Your security questions have been successfully updated'):
+            if validate_on_save(request, ua, 'Your security questions have been successfully updated!'):
                 ua.save()
 
 
@@ -19,7 +19,7 @@ def change_password(request):
     if request.user.is_authenticated:
         if 'inputOldPassword' in request.POST and 'inputNewPassword' in request.POST and check_password(request.POST.get('inputOldPassword'), request.user.password):
             if len(request.POST.get('inputNewPassword')) > 100:
-                messages.warning(request, 'I see how it goes... Well, try to play with maxlength somewhere else ;-). Your password has not been changed.')
+                messages.warning(request, 'I see how it is... Well, try to play with maxlength somewhere else ;). Your password has NOT been changed.')
             else:
                 # update in User table
                 u = get_object_or_404(User, username=request.user.username)
@@ -35,9 +35,9 @@ def change_password(request):
                     if user is not None:
                         request.session.set_expiry(settings.SESSION_EXPIRY_TIME)
                         login(request, user)
-                    messages.info(request, 'Your password has been successfully changed')
+                    messages.info(request, 'Your password has been successfully changed!')
         else:
-            messages.warning(request, 'Your old password has been entered incorrectly')
+            messages.warning(request, 'Your old password has been entered incorrectly. Try again!')
 
 
 def get_context(request, get_all_users):
